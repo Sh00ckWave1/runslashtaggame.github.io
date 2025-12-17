@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chase the Enemy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="logo">Chase the Enemy</h1>
+                <div class="dark-mode-toggle">
+                    <label>
+                        <input type="checkbox" id="darkModeToggle" class="input">
+                        <span class="custom-checkbox"></span>
+                    </label>
+                    <span class="toggle-label">Dark Mode</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="game-container">
+                <div class="game-settings">
+                    <div class="settings-section">
+                        <h2 class="settings-title">Game Settings</h2>
+                        <div class="setting-item">
+                            <label class="setting-label">Game Mode:</label>
+                            <div class="mode-selector">
+                                <button class="mode-btn active" id="onePlayerBtn" data-mode="1">1 Player</button>
+                                <button class="mode-btn" id="surviveTogetherBtn" data-mode="survive">Survive Together</button>
+                                <button class="mode-btn" id="vsBtn" data-mode="vs">VS</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h2 class="settings-title">Player 1 Settings</h2>
+                        <div class="setting-item">
+                            <label class="setting-label">Player 1 Color:</label>
+                            <input type="color" id="player1ColorPicker" value="#3b82f6" class="color-picker">
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Up:</label>
+                            <button class="keybind-btn" id="p1UpKeybindBtn">
+                                <span id="p1UpKeybindDisplay">W</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Down:</label>
+                            <button class="keybind-btn" id="p1DownKeybindBtn">
+                                <span id="p1DownKeybindDisplay">S</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Left:</label>
+                            <button class="keybind-btn" id="p1LeftKeybindBtn">
+                                <span id="p1LeftKeybindDisplay">A</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Right:</label>
+                            <button class="keybind-btn" id="p1RightKeybindBtn">
+                                <span id="p1RightKeybindDisplay">D</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Speed Boost:</label>
+                            <button class="keybind-btn" id="p1SpeedBoostKeybindBtn">
+                                <span id="p1SpeedBoostKeybindDisplay">Q</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Super Boost:</label>
+                            <button class="keybind-btn" id="p1SuperBoostKeybindBtn">
+                                <span id="p1SuperBoostKeybindDisplay">E</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section" id="player2Settings">
+                        <h2 class="settings-title">Player 2 Settings</h2>
+                        <div class="setting-item">
+                            <label class="setting-label">Player 2 Color:</label>
+                            <input type="color" id="player2ColorPicker" value="#10b981" class="color-picker">
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Up:</label>
+                            <button class="keybind-btn" id="p2UpKeybindBtn">
+                                <span id="p2UpKeybindDisplay">I</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Down:</label>
+                            <button class="keybind-btn" id="p2DownKeybindBtn">
+                                <span id="p2DownKeybindDisplay">K</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Left:</label>
+                            <button class="keybind-btn" id="p2LeftKeybindBtn">
+                                <span id="p2LeftKeybindDisplay">J</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Right:</label>
+                            <button class="keybind-btn" id="p2RightKeybindBtn">
+                                <span id="p2RightKeybindDisplay">L</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Speed Boost:</label>
+                            <button class="keybind-btn" id="p2SpeedBoostKeybindBtn">
+                                <span id="p2SpeedBoostKeybindDisplay">U</span>
+                            </button>
+                        </div>
+                        <div class="keybind-item">
+                            <label class="keybind-label">Super Boost:</label>
+                            <button class="keybind-btn" id="p2SuperBoostKeybindBtn">
+                                <span id="p2SuperBoostKeybindDisplay">O</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h2 class="settings-title">Current Keybinds</h2>
+                        <div class="keybind-display">
+                            <div class="keybind-display-section">
+                                <h3 class="keybind-display-title">Player 1</h3>
+                                <div class="keybind-display-item">
+                                    <span>Up:</span>
+                                    <span class="keybind-key" id="displayP1Up">W</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Down:</span>
+                                    <span class="keybind-key" id="displayP1Down">S</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Left:</span>
+                                    <span class="keybind-key" id="displayP1Left">A</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Right:</span>
+                                    <span class="keybind-key" id="displayP1Right">D</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Speed Boost:</span>
+                                    <span class="keybind-key" id="displayP1SpeedBoost">Q</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Super Boost:</span>
+                                    <span class="keybind-key" id="displayP1SuperBoost">E</span>
+                                </div>
+                            </div>
+                            <div class="keybind-display-section" id="displayPlayer2">
+                                <h3 class="keybind-display-title">Player 2</h3>
+                                <div class="keybind-display-item">
+                                    <span>Up:</span>
+                                    <span class="keybind-key" id="displayP2Up">I</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Down:</span>
+                                    <span class="keybind-key" id="displayP2Down">K</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Left:</span>
+                                    <span class="keybind-key" id="displayP2Left">J</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Right:</span>
+                                    <span class="keybind-key" id="displayP2Right">L</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Speed Boost:</span>
+                                    <span class="keybind-key" id="displayP2SpeedBoost">U</span>
+                                </div>
+                                <div class="keybind-display-item">
+                                    <span>Super Boost:</span>
+                                    <span class="keybind-key" id="displayP2SuperBoost">O</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-start-container">
+                    <button class="start-btn" id="startBtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span>Start Game</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

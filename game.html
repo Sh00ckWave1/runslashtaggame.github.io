@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chase the Enemy - Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .game-popup-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+        }
+        .game-popup-stats {
+            display: flex;
+            justify-content: space-around;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .game-popup-stats .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .game-popup-stats .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .game-popup-stats .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        #gameCanvas {
+            flex: 1;
+            width: 100%;
+            background: var(--bg-secondary);
+            border: none;
+            cursor: none;
+        }
+        .game-popup-shop {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+        .game-over-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .game-over-content {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        .game-over-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        .game-over-message {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        .game-over-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .game-over-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .game-over-btn:hover {
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            border-color: var(--text-primary);
+        }
+        .coin-boost-section {
+            margin: 2rem 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .coin-boost-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .coin-boost-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        .coin-boost-btn {
+            font-size: 0.85rem;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-popup-container">
+        <div class="game-popup-stats">
+            <div class="stat-item">
+                <span class="stat-label" id="coinsLabel">Coins:</span>
+                <span class="stat-value" id="coins">0</span>
+            </div>
+            <div class="stat-item" id="player2CoinsStat" style="display: none;">
+                <span class="stat-label">P2 Coins:</span>
+                <span class="stat-value" id="coins2">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Time:</span>
+                <span class="stat-value" id="time">0s</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Speed:</span>
+                <span class="stat-value" id="speed">1.0x</span>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="game-popup-shop">
+            <button class="shop-btn" id="speedBoostBtn">
+                <span class="btn-text">Move Faster</span>
+                <span class="btn-price">10 coins</span>
+                <span class="btn-duration">15s</span>
+            </button>
+            <button class="shop-btn" id="superBoostBtn">
+                <span class="btn-text">Maximum Speed</span>
+                <span class="btn-price">25 coins</span>
+                <span class="btn-duration">5s</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="game-over-modal" style="display: none;">
+        <div class="game-over-content">
+            <h2 id="gameOverTitle" class="game-over-title">You Died!</h2>
+            <p id="gameOverMessage" class="game-over-message"></p>
+            <div class="coin-boost-section">
+                <h3 class="coin-boost-title">Player 1 - Earn More Coins</h3>
+                <div class="coin-boost-buttons">
+                    <button class="shop-btn coin-boost-btn" id="coinBoost1Btn">
+                        <span class="btn-text">Earn 1.5x More</span>
+                        <span class="btn-price">20 coins</span>
+                    </button>
+                    <button class="shop-btn coin-boost-btn" id="coinBoost2Btn">
+                        <span class="btn-text">Earn 2.5x More</span>
+                        <span class="btn-price">30 coins</span>
+                    </button>
+                    <button class="shop-btn coin-boost-btn" id="coinBoost3Btn">
+                        <span class="btn-text">Earn 3.5x More</span>
+                        <span class="btn-price">50 coins</span>
+                    </button>
+                    <button class="shop-btn coin-boost-btn" id="coinBoost4Btn">
+                        <span class="btn-text">Earn 4x More</span>
+                        <span class="btn-price">100 coins</span>
+                    </button>
+                </div>
+            </div>
+            <div class="coin-boost-section" id="player2CoinBoostSection" style="display: none;">
+                <h3 class="coin-boost-title">Player 2 - Earn More Coins</h3>
+                <div class="coin-boost-buttons">
+                    <button class="shop-btn coin-boost-btn" id="coinBoost2_1Btn">
+                        <span class="btn-text">Earn 1.5x More</span>
+                        <span class="btn-price">20 coins</span>
+                    </button>
+                    <button class="shop-btn coin-boost-btn" id="coinBoost2_2Btn">
+                        <span class="btn-text">Earn 2.5x More</span>
+                        <span class="btn-price">30 coins</span>
+                    </button>
+                    <button class="shop-btn coin-boost-btn" id="coinBoost2_3Btn">
+                        <span class="btn-text">Earn 3.5x More</span>
+                        <span class="btn-price">50 coins</span>
+                    </button>
+                    <button class="shop-btn coin-boost-btn" id="coinBoost2_4Btn">
+                        <span class="btn-text">Earn 4x More</span>
+                        <span class="btn-price">100 coins</span>
+                    </button>
+                </div>
+            </div>
+            <div class="game-over-buttons">
+                <button class="game-over-btn" id="restartBtn">Play Again</button>
+                <button class="game-over-btn" id="menuBtn">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+
